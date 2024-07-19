@@ -1,4 +1,4 @@
-# VR Components Builder
+# Components Builder
 
 支持同时编译出兼容 Vue2.7+ 与 Vue3.2+ 的组件。
 
