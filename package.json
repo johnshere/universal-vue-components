@@ -1,0 +1,50 @@
+{
+    "name": "universal-vue-components",
+    "version": "0.0.1",
+    "author": "EsunR",
+    "license": "UNLICENSED",
+    "description": "Build universal vue 2/3 components",
+    "private": true,
+    "scripts": {
+        "dev:vue2": "pnpm --filter ./packages/playground run dev:vue2",
+        "dev:vue3": "pnpm --filter ./packages/playground run dev:vue3",
+        "build": "pnpm --filter ./packages/builder run build",
+        "publish": "pnpm --filter ./packages/scripts run publish",
+        "clean:node_modules": "find . -name \"node_modules\" -type d -exec rm -rf '{}' +",
+        "lint-staged": "lint-staged",
+        "postinstall": "husky install"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": "eslint",
+        "*.{css,less,scss,styl}": "stylelint"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.7.0",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^18.0.0",
+        "@typescript-eslint/eslint-plugin": "8.0.0-alpha.44",
+        "cross-env": "^7.0.3",
+        "eslint": "^9.7.0",
+        "eslint-plugin-vue": "^9.27.0",
+        "husky": "^8.0.1",
+        "lint-staged": "^13.0.3",
+        "nodemon": "^3.1.4",
+        "prettier": "^3.3.2",
+        "stylelint": "^16.7.0",
+        "stylelint-config-standard": "^36.0.1",
+        "stylelint-stylus": "^1.0.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.5.3",
+        "typescript-eslint": "8.0.0-alpha.44"
+    },
+    "packageManager": "pnpm@8.3.1",
+    "volta": {
+        "node": "18.20.4"
+    },
+    "dependencies": {
+        "@shared/config": "workspace:^",
+        "@shared/utils": "workspace:^",
+        "vue2": "npm:vue@2.7",
+        "vue3": "npm:vue@3.2"
+    }
+}

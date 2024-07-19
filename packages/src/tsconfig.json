@@ -1,0 +1,31 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.web.json",
+    "compilerOptions": {
+        "ignoreDeprecations": "5.0",
+        "allowJs": true,
+        "module": "ESNext",
+        "target": "ES2018",
+        "noImplicitAny": false,
+        "declaration": true,
+        "sourceMap": true,
+        "lib": ["ES2018", "DOM", "DOM.Iterable"],
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "Node",
+        "types": [],
+        "baseUrl": "./",
+        "paths": {
+            // "vue": ["./node_modules/vue3/dist/vue.d.mts"]
+            "vue": ["../../node_modules/vue2/types/index.d.ts"],
+            "@src/*": ["./*"]
+        }
+    },
+    "include": [
+        "*/**/*.ts",
+        "*/**/*.d.ts",
+        "*/**/*.vue",
+        // ".eslintrc.cjs",
+        "index.ts",
+        "module.declare.d.ts"
+    ],
+    "exclude": ["node_modules"]
+}

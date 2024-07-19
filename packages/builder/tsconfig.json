@@ -1,0 +1,24 @@
+{
+    "ts-node": {
+        "compilerOptions": {
+            "module": "CommonJS"
+        }
+    },
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "ESNext",
+        "lib": ["ESNext"],
+        "strict": true,
+        "sourceMap": false,
+        "declaration": false,
+        "skipLibCheck": true,
+        "jsx": "preserve",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "useDefineForClassFields": true,
+        "resolveJsonModule": true
+    },
+    "exclude": ["node_modules"]
+}
