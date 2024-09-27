@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+
 /* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable global-require */
+
 import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
@@ -8,7 +8,7 @@ import vue3 from '@vitejs/plugin-vue';
 import vue2 from '@vitejs/plugin-vue2';
 import path from 'path';
 import esbuild from 'rollup-plugin-esbuild';
-import injectEnv from 'rollup-plugin-inject-process-env';
+import replace from '@rollup/plugin-replace';
 import * as vue2Compiler from 'vue2/compiler-sfc';
 import * as vue3Compiler from 'vue3/compiler-sfc';
 import {esbuildConfig, nodeResolveExt} from '../config';
@@ -67,8 +67,8 @@ function styleModuleResolver() {
  */
 export function generateCommonPluginConfig() {
     return [
-        injectEnv({
-            VUE_VERSION: process.env.VUE_VERSION,
+        replace({
+            'process.env.VUE_VERSION': process.env.VUE_VERSION,
         }),
         styleModuleResolver(),
         alias({

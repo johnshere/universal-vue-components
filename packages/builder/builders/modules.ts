@@ -30,6 +30,7 @@ export async function buildModules() {
             preserveModules: true, // 保留原有的目录结构
             // preserveModulesRoot: entryFilePath, // 入口文件的路径，会从 output.dir 中剥离出来
             sourcemap: true,
+            entryFileNames: `[name].${config.ext}`,
         } as OutputOptions;
     });
 

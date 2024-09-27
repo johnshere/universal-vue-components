@@ -13,6 +13,7 @@ export const buildConfig = {
         bundle: {
             path: `${PKG_NAME}/esm`,
         },
+        ext: 'mjs',
     },
     cjs: {
         format: 'cjs',
@@ -20,6 +21,7 @@ export const buildConfig = {
         bundle: {
             path: `${PKG_NAME}/cjs`,
         },
+        ext: 'js',
     },
 };
 

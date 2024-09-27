@@ -8,8 +8,6 @@ import consola from 'consola';
 import chalk from 'chalk';
 import {distPath, stylesPath} from '../utils/paths';
 
-// const noTradePrefixFile = /(index)/;
-// const noTradePrefixFolder = /(assets)/;
 const distBundle = path.resolve(distPath, 'styles');
 
 /**

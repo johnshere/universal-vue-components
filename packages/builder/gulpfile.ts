@@ -18,7 +18,7 @@ import {generatePackageJSON} from './builders/packageJSON';
 
 function logInfo() {
     return new Promise((resolve, reject) => {
-        figlet(`VR Comps Veu${process.env.VUE_VERSION}`, (err, data) => {
+        figlet(`Uni Comps Veu${process.env.VUE_VERSION}`, (err, data) => {
             if (err) {
                 reject(err);
                 return;

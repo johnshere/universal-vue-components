@@ -5,6 +5,26 @@
     "description": "Vue 2/3 universal components",
     "main": "cjs/index.js",
     "module": "esm/index.js",
+    "types": "esm/index.d.ts",
+    "exports": {
+        ".": {
+            "require": "./cjs/index.js",
+            "import": "./esm/index.js",
+            "types": "./esm/index.d.ts"
+        },
+        "./esm": "./esm/index.js",
+        "./cjs": "./cjs/index.js",
+        "./esm/*.js": "./esm/*.js",
+        "./esm/*": "./esm/*.js",
+        "./cjs/*.js": "./cjs/*.js",
+        "./cjs/*": "./cjs/*.js",
+        "./*": "./*"
+    },
+    "sideEffects": [
+        "dist/*",
+        "styles/**/*.css",
+        "styles/src/**/*.styl"
+    ],
     "scripts": {},
     "keywords": [],
     "license": "ISC",
@@ -14,8 +34,5 @@
     },
     "_peerDependencies": {
         "vue": "^2.7 || ^3.2"
-    },
-    "dependencies": {
-        "@vue/tsconfig": "^0.1.3"
     }
 }

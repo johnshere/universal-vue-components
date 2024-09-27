@@ -1,5 +1,5 @@
 import {withInstall} from '../../utils';
-import _UniComp from './src/uni-comp.vue';
+import Component from './src/uni-comp.vue';
 
-export const UniComp = withInstall(_UniComp);
+export const UniComp = withInstall(Component);
 export default UniComp;

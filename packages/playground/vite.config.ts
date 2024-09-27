@@ -18,22 +18,16 @@ export default defineConfig({
                   compiler: vue3Compiler,
               }),
         {
-            name: 'index-path-rewriter',
-            configureServer(server) {
-                server.middlewares.use((req, res, next) => {
-                    if (req.url === '/') {
-                        req.url = IS_VUE2
-                            ? './index_vue2.html'
-                            : './index_vue3.html';
-                    }
-                    next();
-                });
+            name: 'html-rewriter',
+            transformIndexHtml(html: string) {
+                return html.replace(/%VUE_VERSION%/g, IS_VUE2 ? '2' : '3');
             },
         },
     ],
     resolve: {
         alias: {
             vue: IS_VUE2 ? 'vue2' : 'vue3',
+            '@': path.resolve(__dirname, './src/'),
             '@src': path.resolve(__dirname, '../src/'),
         },
     },
