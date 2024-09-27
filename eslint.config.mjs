@@ -19,6 +19,7 @@ export default tsEslint.config(
         rules: {
             'vue/html-indent': ['error', 4],
             'vue/singleline-html-element-content-newline': 'off',
+            'vue/multi-word-component-names': 'off',
             'vue/max-attributes-per-line': [
                 'error',
                 {

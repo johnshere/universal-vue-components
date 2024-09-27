@@ -15,5 +15,9 @@
         "typescript": "^5.2.2",
         "vite": "^5.3.1",
         "vue-tsc": "^2.0.21"
+    },
+    "dependencies": {
+        "vue-router3": "npm:vue-router@^3.6.5",
+        "vue-router4": "npm:vue-router@^4.4.0"
     }
 }
