@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import {select} from '@inquirer/prompts';
-import {PROJECT_OUTPUT_PATH} from '@shared/config/paths';
+import {PROJECT_OUTPUT_PATH, PROJECT_ROOT_PATH} from '@shared/config/paths';
 import {genNextVersion, getVersion, recordVersion} from '@shared/utils';
 import chalk from 'chalk';
 import consola from 'consola';
 import fs from 'fs';
 import path from 'path';
+import execa from 'execa';
 
 const DEPLOY_PACKAGE_MAP = {
     '@esunr/uni-comps-vue2': {
@@ -62,7 +63,7 @@ async function main() {
             break;
         // 合并发布 uni-comps-vue2 和 uni-comps-vue3
         case '@esunr/uni-comps-vue*':
-            await publishVrComponents();
+            await publishComponents();
             break;
         case 'exit':
             consola.info('脚本已退出');
@@ -70,20 +71,6 @@ async function main() {
 }
 
 main();
-
-let mod: typeof import('execa');
-/**
- * 在 CJS 环境加载 ESM
- * https://github.com/sindresorhus/execa/issues/489#issuecomment-1123309483
- */
-async function loadExeca() {
-    if (mod) {
-        return mod;
-    }
-
-    mod = await (eval("import('execa')") as Promise<typeof import('execa')>);
-    return mod;
-}
 
 /**
  * 发布 npm 包
@@ -124,11 +111,10 @@ async function publishNpmPackage(
     );
 
     // 执行 npm 发布指令
-    const {execa} = await loadExeca();
-    await execa({
+    execa.commandSync(`pnpm publish --access public --no-git-checks`, {
         cwd: pkgPath,
         stdio: 'inherit',
-    })`pnpm publish --access public --no-git-checks`;
+    });
 
     // 记录版本值
     recordVersion(packageName, selectedVersion);
@@ -148,7 +134,8 @@ async function publishNpmPackage(
 /**
  * 合并发布 uni-comps-vue2 和 uni-comps-vue3
  */
-async function publishVrComponents() {
+async function publishComponents() {
+    buildComponents();
     if (
         !fs.existsSync(
             path.resolve(DEPLOY_PACKAGE_MAP['@esunr/uni-comps-vue2'].path),
@@ -185,4 +172,13 @@ async function publishVrComponents() {
     const [nextVue2Version, nextVue3Version] = selectedVersion.split('|');
     await publishNpmPackage('@esunr/uni-comps-vue2', nextVue2Version);
     await publishNpmPackage('@esunr/uni-comps-vue3', nextVue3Version);
+}
+
+/** 构建组件库 */
+function buildComponents() {
+    consola.info('正在构建组件');
+    execa.commandSync('pnpm run build', {
+        cwd: PROJECT_ROOT_PATH,
+        stdio: 'inherit',
+    });
 }
