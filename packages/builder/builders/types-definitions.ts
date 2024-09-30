@@ -11,7 +11,7 @@ import {Project, ResolutionHost, SourceFile, ts} from 'ts-morph';
 import * as vue2Compiler from 'vue2/compiler-sfc';
 import * as vue3Compiler from 'vue3/compiler-sfc';
 import {buildConfig, BuildModule} from '../config';
-import {IS_VUE2} from '../constance';
+import {IS_VUE2} from '../utils/constance';
 import {excludeFiles} from '../utils';
 import {
     builderPath,

@@ -1,25 +1,26 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 import {select} from '@inquirer/prompts';
+import {VUE2_PKG_NAME, VUE3_PKG_NAME} from '@shared/config/constance';
 import {PROJECT_OUTPUT_PATH, PROJECT_ROOT_PATH} from '@shared/config/paths';
 import {genNextVersion, getVersion, recordVersion} from '@shared/utils';
 import chalk from 'chalk';
 import consola from 'consola';
+import execa from 'execa';
 import fs from 'fs';
 import path from 'path';
-import execa from 'execa';
 
-const DEPLOY_PACKAGE_MAP = {
-    '@esunr/uni-comps-vue2': {
-        path: path.join(PROJECT_OUTPUT_PATH, 'uni-comps-vue2'),
-        version: getVersion('@esunr/uni-comps-vue2'),
+const DEPLOY_PACKAGES: {name: string; path: string; version: string}[] = [
+    {
+        name: VUE2_PKG_NAME,
+        path: path.join(PROJECT_OUTPUT_PATH, VUE2_PKG_NAME),
+        version: getVersion(VUE2_PKG_NAME),
     },
-    '@esunr/uni-comps-vue3': {
-        path: path.join(PROJECT_OUTPUT_PATH, 'uni-comps-vue3'),
-        version: getVersion('@esunr/uni-comps-vue2'),
+    {
+        name: VUE3_PKG_NAME,
+        path: path.join(PROJECT_OUTPUT_PATH, VUE3_PKG_NAME),
+        version: getVersion(VUE3_PKG_NAME),
     },
-} as const;
-
-type DeployPackageName = keyof typeof DEPLOY_PACKAGE_MAP;
+];
 
 const VERSION_OPTIONS = ['prerelease', 'patch', 'minor', 'major'] as const;
 
@@ -27,42 +28,38 @@ const VERSION_OPTIONS = ['prerelease', 'patch', 'minor', 'major'] as const;
  * 主执行函数
  */
 async function main() {
-    const publishType = (await select({
+    const publishType = await select({
         message: '请选择发布的内容',
         choices: [
-            ...Object.keys(DEPLOY_PACKAGE_MAP)
-                // 不允许 vr-components 独立发包，要发就必须 vue2 和 vue3 一起发
-                .filter(key => !key.includes('@esunr/uni-comps-vue'))
-                .map(key => {
-                    const version =
-                        DEPLOY_PACKAGE_MAP[key as DeployPackageName].version;
-                    const spaces = new Array(30 - key.length)
-                        .fill(' ')
-                        .join('');
-                    return {
-                        name: `${key}` + spaces + `(version: ${version})`,
-                        value: key,
-                    };
-                }),
+            ...DEPLOY_PACKAGES.map(item => {
+                const version = item.version;
+                const spaces = new Array(30 - item.name.length)
+                    .fill(' ')
+                    .join('');
+                return {
+                    name: `${item.name}` + spaces + `(version: ${version})`,
+                    value: item.name,
+                };
+            }),
             {
-                name: '@esunr/uni-comps-vue*',
-                value: '@esunr/uni-comps-vue*',
+                name: 'all',
+                value: 'all',
             },
             {
                 name: chalk.red('退出发布'),
                 value: 'exit',
             },
         ],
-    })) as DeployPackageName | '@esunr/uni-comps-vue*' | 'exit';
+    });
 
     switch (publishType) {
         // 发布 npm 包
-        case '@esunr/uni-comps-vue2':
-        case '@esunr/uni-comps-vue3':
+        case VUE2_PKG_NAME:
+        case VUE3_PKG_NAME:
             await publishNpmPackage(publishType);
             break;
         // 合并发布 uni-comps-vue2 和 uni-comps-vue3
-        case '@esunr/uni-comps-vue*':
+        case 'all':
             await publishComponents();
             break;
         case 'exit':
@@ -75,11 +72,12 @@ main();
 /**
  * 发布 npm 包
  */
-async function publishNpmPackage(
-    packageName: keyof typeof DEPLOY_PACKAGE_MAP,
-    version?: string,
-) {
-    const pkgPath = DEPLOY_PACKAGE_MAP[packageName].path;
+async function publishNpmPackage(packageName: string, version?: string) {
+    const pkgInfo = DEPLOY_PACKAGES.find(item => item.name === packageName);
+    if (!pkgInfo) {
+        throw new Error(`DEPLOY_PACKAGES 无法找到 ${packageName} 相关的信息`);
+    }
+    const pkgPath = pkgInfo.path;
     if (!fs.existsSync(pkgPath)) {
         throw new Error(`无法查找到 ${pkgPath} 目录，请确认是否已经编译出内容`);
     }
@@ -136,42 +134,46 @@ async function publishNpmPackage(
  */
 async function publishComponents() {
     buildComponents();
-    if (
-        !fs.existsSync(
-            path.resolve(DEPLOY_PACKAGE_MAP['@esunr/uni-comps-vue2'].path),
-        ) ||
-        !fs.existsSync(
-            path.resolve(DEPLOY_PACKAGE_MAP['@esunr/uni-comps-vue3'].path),
-        )
-    ) {
+    const vue2PkgInfo = DEPLOY_PACKAGES.find(
+        item => item.name === VUE2_PKG_NAME,
+    );
+    const vue3PkgInfo = DEPLOY_PACKAGES.find(
+        item => item.name === VUE3_PKG_NAME,
+    );
+    if (!vue2PkgInfo || !vue3PkgInfo) {
         throw new Error(
-            '未同时找到 @esunr/uni-comps-vue2 与 @esunr/uni-comps-vue2 目录，请确认是否已经编译出内容',
+            `DEPLOY_PACKAGES 无法找到 ${VUE2_PKG_NAME} 或 ${VUE3_PKG_NAME} 相关的信息`,
         );
     }
-
-    const vrCompsVue2Version = getVersion('@esunr/uni-comps-vue2');
-    const vrCompsVue3Version = getVersion('@esunr/uni-comps-vue3');
+    if (
+        !fs.existsSync(path.resolve(vue2PkgInfo.path)) ||
+        !fs.existsSync(path.resolve(vue3PkgInfo.path))
+    ) {
+        throw new Error(
+            `未同时找到 ${VUE2_PKG_NAME} 与 ${VUE3_PKG_NAME} 目录，请确认是否已经编译出内容`,
+        );
+    }
 
     const selectedVersion = (await select({
         message: '请选择包版本的升级类型：',
         choices: VERSION_OPTIONS.map(key => {
-            const nextVue2Version = genNextVersion(vrCompsVue2Version, key);
-            const nextVue3Version = genNextVersion(vrCompsVue3Version, key);
+            const nextVue2Version = genNextVersion(vue2PkgInfo.version, key);
+            const nextVue3Version = genNextVersion(vue3PkgInfo.version, key);
             return {
                 name: key,
                 value: `${nextVue2Version}|${nextVue3Version}`,
                 description:
-                    `当前版本号：vr-components-vue2@${chalk.red(vrCompsVue2Version)}, ` +
-                    `vr-components-vue3@${chalk.red(vrCompsVue3Version)}` +
+                    `当前版本号：${VUE2_PKG_NAME}@${chalk.red(vue2PkgInfo.version)}, ` +
+                    `${VUE3_PKG_NAME}@${chalk.red(vue3PkgInfo.version)}` +
                     '\n' +
-                    `选择此选项后，将生成的新版本号：vr-components-vue2@${chalk.red(nextVue2Version)}, ` +
-                    `vr-components-vue3@${chalk.red(nextVue3Version)}`,
+                    `选择此选项后，将生成的新版本号：${VUE2_PKG_NAME}@${chalk.red(nextVue2Version)}, ` +
+                    `${VUE3_PKG_NAME}@${chalk.red(nextVue3Version)}`,
             };
         }),
     })) as string;
     const [nextVue2Version, nextVue3Version] = selectedVersion.split('|');
-    await publishNpmPackage('@esunr/uni-comps-vue2', nextVue2Version);
-    await publishNpmPackage('@esunr/uni-comps-vue3', nextVue3Version);
+    await publishNpmPackage(VUE2_PKG_NAME, nextVue2Version);
+    await publishNpmPackage(VUE3_PKG_NAME, nextVue3Version);
 }
 
 /** 构建组件库 */

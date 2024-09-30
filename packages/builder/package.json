@@ -6,7 +6,9 @@
     "main": "index.js",
     "scripts": {
         "build:vue2": "cross-env VUE_VERSION=2 gulp -f ./gulpfile.ts",
+        "build:vue2:watch": "cross-env VUE_VERSION=2 gulp -f ./gulpfile.ts --watchBuild",
         "build:vue3": "cross-env VUE_VERSION=3 gulp -f ./gulpfile.ts",
+        "build:vue3:watch": "cross-env VUE_VERSION=3 gulp -f ./gulpfile.ts --watchBuild",
         "build": "pnpm build:vue2 && pnpm build:vue3"
     },
     "dependencies": {

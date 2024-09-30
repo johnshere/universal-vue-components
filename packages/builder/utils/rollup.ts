@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-require-imports */
 
 import alias from '@rollup/plugin-alias';
@@ -12,11 +11,11 @@ import replace from '@rollup/plugin-replace';
 import * as vue2Compiler from 'vue2/compiler-sfc';
 import * as vue3Compiler from 'vue3/compiler-sfc';
 import {esbuildConfig, nodeResolveExt} from '../config';
-import {IS_VUE2, PKG_NAME} from '../constance';
+import {IS_VUE2, PKG_NAME} from './constance';
 import {compsSrcPath} from './paths';
 
 function getPackageDependencies(
-    pkgPath: string
+    pkgPath: string,
 ): Record<'dependencies' | 'peerDependencies', string[]> {
     const manifest = require(pkgPath);
     const {dependencies = {}, peerDependencies = {}} = manifest;
@@ -28,7 +27,7 @@ function getPackageDependencies(
 
 export const generateExternal = async (options: {full: boolean}) => {
     const {dependencies, peerDependencies} = getPackageDependencies(
-        path.resolve(compsSrcPath, 'package.json')
+        path.resolve(compsSrcPath, 'package.json'),
     );
 
     return (id: string) => {
@@ -38,7 +37,7 @@ export const generateExternal = async (options: {full: boolean}) => {
         }
 
         return [...new Set(packages)].some(
-            pkg => id === pkg || id.startsWith(`${pkg}/`)
+            pkg => id === pkg || id.startsWith(`${pkg}/`),
         );
     };
 };
@@ -73,17 +72,16 @@ export function generateCommonPluginConfig() {
         styleModuleResolver(),
         alias({
             entries: {
-                vue: IS_VUE2 ? 'vue2' : 'vue3',
                 '@src': compsSrcPath,
             },
         }),
         (IS_VUE2
             ? vue2({
-                compiler: vue2Compiler as any,
-            })
+                  compiler: vue2Compiler as any,
+              })
             : vue3({
-                compiler: vue3Compiler as any,
-            })) as any,
+                  compiler: vue3Compiler as any,
+              })) as any,
         nodeResolve({
             extensions: nodeResolveExt,
         }),

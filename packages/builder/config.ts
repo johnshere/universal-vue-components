@@ -1,6 +1,5 @@
 import path from 'path';
 import {Options as EsBuildOptions} from 'rollup-plugin-esbuild';
-import {PKG_NAME} from './constance';
 import {distPath} from './utils/paths';
 
 /**
@@ -10,17 +9,11 @@ export const buildConfig = {
     esm: {
         format: 'esm',
         path: path.resolve(distPath, 'esm'),
-        bundle: {
-            path: `${PKG_NAME}/esm`,
-        },
         ext: 'mjs',
     },
     cjs: {
         format: 'cjs',
         path: path.resolve(distPath, 'cjs'),
-        bundle: {
-            path: `${PKG_NAME}/cjs`,
-        },
         ext: 'js',
     },
 };

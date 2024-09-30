@@ -1,16 +1,12 @@
-import path from 'path';
 import {PROJECT_ROOT_PATH} from '@shared/config/paths';
-import {IS_VUE2} from '../constance';
+import path from 'path';
+import {PKG_NAME} from './constance';
 
 // 项目根目录
 export const projectPath = PROJECT_ROOT_PATH;
 
 // 打包输出目录
-export const distPath = path.resolve(
-    projectPath,
-    'output',
-    IS_VUE2 ? 'uni-comps-vue2' : 'uni-comps-vue3',
-);
+export const distPath = path.resolve(projectPath, 'output', PKG_NAME);
 
 // vr-components 子包的目录
 export const packagesPath = path.resolve(projectPath, 'packages');

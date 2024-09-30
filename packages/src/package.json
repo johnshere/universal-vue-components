@@ -1,21 +1,21 @@
 {
-    "name": "@esunr/vue-uni-comps",
+    "name": "src",
     "version": "0.0.0",
     "author": "EsunR",
     "description": "Vue 2/3 universal components",
     "main": "cjs/index.js",
-    "module": "esm/index.js",
+    "module": "esm/index.mjs",
     "types": "esm/index.d.ts",
     "exports": {
         ".": {
             "require": "./cjs/index.js",
-            "import": "./esm/index.js",
+            "import": "./esm/index.mjs",
             "types": "./esm/index.d.ts"
         },
-        "./esm": "./esm/index.js",
+        "./esm": "./esm/index.mjs",
         "./cjs": "./cjs/index.js",
-        "./esm/*.js": "./esm/*.js",
-        "./esm/*": "./esm/*.js",
+        "./esm/*.mjs": "./esm/*.mjs",
+        "./esm/*": "./esm/*.mjs",
         "./cjs/*.js": "./cjs/*.js",
         "./cjs/*": "./cjs/*.js",
         "./*": "./*"

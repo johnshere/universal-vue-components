@@ -1,3 +1,3 @@
 export * from './sfc';
 export * from './style';
-export * from './version';
+export * from './env';
