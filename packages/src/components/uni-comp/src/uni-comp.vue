@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts" setup>
-import '@src/styles/src/uni-comp.styl';
 import {classNs, IS_VUE2} from '@src/utils';
 import {ref, toRefs, type PropType} from 'vue';
 

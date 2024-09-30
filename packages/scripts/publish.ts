@@ -109,10 +109,14 @@ async function publishNpmPackage(packageName: string, version?: string) {
     );
 
     // 执行 npm 发布指令
-    execa.commandSync(`pnpm publish --access public --no-git-checks`, {
-        cwd: pkgPath,
-        stdio: 'inherit',
-    });
+    const isPrerelease = selectedVersion.includes('-');
+    execa.commandSync(
+        `pnpm publish --access public --no-git-checks --tag ${isPrerelease ? 'prerelease' : 'latest'}`,
+        {
+            cwd: pkgPath,
+            stdio: 'inherit',
+        },
+    );
 
     // 记录版本值
     recordVersion(packageName, selectedVersion);

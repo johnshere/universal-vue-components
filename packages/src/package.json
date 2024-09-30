@@ -23,7 +23,9 @@
     "sideEffects": [
         "dist/*",
         "styles/**/*.css",
-        "styles/src/**/*.styl"
+        "styles/src/**/*.styl",
+        "esm/components/*/style/*",
+        "cjs/components/*/style/*"
     ],
     "scripts": {},
     "keywords": [],
