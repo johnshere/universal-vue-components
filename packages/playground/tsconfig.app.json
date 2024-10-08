@@ -26,6 +26,8 @@
         "paths": {
             // "vue": ["./node_modules/vue3/dist/vue.d.mts"]
             "vue": ["../../node_modules/vue2/types/index.d.ts"],
+            "vue-router": ["./node_modules/vue-router3/types/index.d.ts"],
+            "@/*": ["./src/*"],
             "@src/*": ["../src/*"]
         }
     },
