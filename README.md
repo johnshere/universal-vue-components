@@ -66,7 +66,7 @@ pnpm dev:vue3 # vue3 模式
 
 ## 4. 使用发布后的组件
 
-[传送门](./doc/comp-quick-start.md)
+[传送门](./doc/comps-doc.md)
 
 ## 5. 组建开发规范
 
