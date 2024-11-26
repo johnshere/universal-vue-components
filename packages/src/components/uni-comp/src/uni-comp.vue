@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import {classNs, IS_VUE2} from '@src/utils';
+import {classNs, IS_VUE2} from '../../../utils';
 import {ref, toRefs, type PropType} from 'vue';
 
 // 推荐使用该方式定义 props，使用 defineProps<{/** ... */}>() 泛型方式编写会导致 vue2.7 项目无法识别 Props 提示
